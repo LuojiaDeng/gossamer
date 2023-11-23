@@ -5,6 +5,6 @@ A singularity image can be create from the definition file.
 
 What you only need to do is to change the path to gossamer to your own local path.
 
-%files
+%files  
 path/to/gossamer /home/gossamer
 
