@@ -1,0 +1,65 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%files
+    /home/soramafu/apps/gossamer/gossamer /home/gossamer
+
+%post
+    apt-get -yq update
+    apt-get install -yq --no-install-recommends \
+    locales \
+    g++ \
+    make \
+    cmake \
+    libboost-all-dev \
+    pandoc \
+    zlib1g-dev \
+    libbz2-dev \
+    libsqlite3-dev
+
+    locale-gen en_US.UTF-8
+    update-locale LANG=en_US.UTF-8
+
+    # set environment variables
+    export OPT=/opt/local
+    export PATH=$OPT/bin:$PATH
+    export LD_LIBRARY_PATH=$OPT/lib
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+    mkdir -p $OPT
+    mkdir -p $LD_LIBRARY_PATH
+
+    # cp -r ./gossamer /home/gossamer
+    mkdir -p /home/gossamer/build
+    cd /home/gossamer/build
+    cmake -DCMAKE_INSTALL_PREFIX=$OPT ..
+    make
+    make test
+    make install
+
+    apt-get install -yq --no-install-recommends \
+    locales \
+    libboost-all-dev \
+    zlib1g \
+    bzip2
+
+    locale-gen en_US.UTF-8
+    update-locale LANG=en_US.UTF-8
+
+    mkdir -p $OPT
+
+    # User configuration
+    adduser --disabled-password --gecos '' ubuntu
+    chsh -s /bin/bash
+    mkdir -p /home/ubuntu
+
+%environment
+    export OPT=/opt/local
+    export PATH=$OPT/bin:$PATH
+    export LD_LIBRARY_PATH=$OPT/lib
+    export LC_ALL=en_US.UTF-8
+    export LANG=en_US.UTF-8
+
+%runscript
+    exec /bin/bash "$@"
