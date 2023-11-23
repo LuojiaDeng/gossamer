@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:18.04
 
 %files
-    /home/soramafu/apps/gossamer/gossamer /home/gossamer
+    path/to/gossamer /home/gossamer
 
 %post
     apt-get -yq update
